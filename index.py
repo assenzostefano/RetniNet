@@ -39,11 +39,11 @@ print("Il bot si è avviato con successo!")
 #Command /start
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    chat = message.chat.id
+    chat_id = message.chat.id
     print("Triggered command START.")
-    bot.send_photo(message.chat.id, photo='https://i.imgur.com/6YPJBze.png')
+    bot.send_photo(chat_id, photo='https://i.imgur.com/6YPJBze.png')
     messageText = "✋ Benvenuto su <b>RetniNet!</b>\n\n<b>RetniNet</b> è un bot privato per <b>automatizzare</b> e <b>semplificare</b> cose che facciamo quotidianamente. \n\n👨‍💻 Creato & sviluppato da @Stef58_Official"
-    bot.send_message(chat,messageText, parse_mode="HTML")
+    bot.send_message(chat_id,messageText, parse_mode="HTML")
 
 #Command /music
 @bot.message_handler(commands=['music'])
@@ -72,7 +72,6 @@ def music_step(pm):
         }],
     }
     url = pm.text
-    video = url
     send_message = "🎶 Stiamo scaricando la canzone attenda..."
     bot.send_message(pm.chat.id, send_message)
     with YoutubeDL(ytdl_opts) as ydl:
