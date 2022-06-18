@@ -17,6 +17,7 @@ import json
 import goslate
 import urllib.request
 import urllib.parse
+from dotenv import load_dotenv
 from yt_dlp import YoutubeDL
 from platform import system
 from tqdm.auto import tqdm
@@ -28,7 +29,8 @@ from pytube import YouTube
 from bs4 import BeautifulSoup
 from gc import callbacks
 
-API_TOKEN = '5407819601:AAEfiaw8ZNlyBHftLsJR5VAcMyv257tWHMY'
+load_dotenv()
+API_TOKEN = os.getenv('BOT_TOKEN')
 
 bot = telebot.TeleBot(API_TOKEN)
 print("Il bot si è avviato con successo!")
@@ -95,13 +97,14 @@ def meteo(pm):
 
 def meteo_step(message):
     city = message.text
-    response = requests.get("https://api.openweathermap.org/data/2.5/weather?q="+city+",it&APPID=dd9c01763daea0b5539db05fbfbe4cb6").json()
+    token_weather = os.environ.get('WEATHER_TOKEN')
+    response = requests.get("https://api.openweathermap.org/data/2.5/weather?q="+city+",it&APPID="+token_weather).json()
+    print(response)
     weather = response['weather'][0]['main']
     temp = response['main']['temp']
-    weather_translate = goslate.Goslate(service_urls=['https://translate.google.it']).translate(weather, 'it')
     temp = temp - 273.15
     bot.send_message(message.chat.id, "🌡️ La temperatura in " + city + " è di " + str(temp) + "°C")
-    bot.send_message(message.chat.id, "🌧️ La condizione è " + weather_translate)
+    bot.send_message(message.chat.id, "🌧️ La condizione è " + weather)
 
 #Command /stats
 @bot.message_handler(commands=['stats'])
@@ -134,7 +137,7 @@ def pastebin_step(message):
     chat = message.chat.id
     text = message.text
     site = 'https://pastebin.com/api/api_post.php'
-    dev_key = 'V701_05L-yFOUH_0J24VFiJQQ1WwHrbO'
+    dev_key = os.environ.get('PASTEBIN_TOKEN')
     code = text     
     our_data = urllib.parse.urlencode({"api_dev_key": dev_key, "api_option": "paste", "api_paste_code": code})  
     our_data = our_data.encode()                    
