@@ -98,7 +98,6 @@ def meteo_step(message):
     city = message.text
     token_weather = os.environ.get('WEATHER_TOKEN')
     response = requests.get("https://api.openweathermap.org/data/2.5/weather?q="+city+",it&APPID="+token_weather).json()
-    print(response)
     weather = response['weather'][0]['main']
     temp = response['main']['temp']
     temp = temp - 273.15
