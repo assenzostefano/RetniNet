@@ -1,4 +1,5 @@
 import psutil
+import requests
 import random
 import pyfiglet
 import socket
@@ -9,10 +10,8 @@ import time
 import ast
 import ffmpeg
 import os
-import requests
 import python_weather
 import asyncio
-import requests
 import json
 import goslate
 import urllib.request
@@ -42,7 +41,7 @@ def send_welcome(message):
     chat_id = message.chat.id
     print("Triggered command START.")
     bot.send_photo(chat_id, photo='https://i.imgur.com/6YPJBze.png')
-    messageText = "✋ Benvenuto su <b>RetniNet!</b>\n\n<b>RetniNet</b> è un bot privato per <b>automatizzare</b> e <b>semplificare</b> cose che facciamo quotidianamente. \n\n👨‍💻 Creato & sviluppato da @Stef58_Official"
+    messageText = "✋ Benvenuto su <b>RetniNet!</b>\n\n<b>RetniNet</b> è un bot privato per <b>automatizzare</b> e <b>semplificare</b> cose che facciamo quotidianamente. \n\n👨‍💻 Creato & sviluppato da @Stef58_Official \n⚠️ Lo start è stato preso da DeathRoad"
     bot.send_message(chat_id,messageText, parse_mode="HTML")
 
 #Command /music
@@ -144,4 +143,36 @@ def pastebin_step(message):
     send_msg = "📋 Il tuo <b>codice</b> è stato inviato con successo!\n\n<b>Link:</b> " + str(resp)
     bot.send_message(chat,send_msg, parse_mode="HTML")
 
+#Command /epicgames
+
+@bot.message_handler(commands=['epicgames'])
+def epicgames(message):
+    text = message.text
+    bot.send_message(message.chat.id, "🎮 Vuoi vedere il gioco disponibile al momento o quello futuro? (disponibile/futuro)")
+    bot.register_next_step_handler(message, epicgames_step)
+
+def epicgames_step(message):
+    text = message.text
+    if text == 'disponibile':
+        print("Triggered command EPICGAMES.")
+        url = "https://api.plenusbot.xyz/epic_games?country=IT"
+        response = requests.get(url).json()
+        current_games = response['currentGames'][0]['title']
+        image_currentgames = response['currentGames'][0]['keyImages'][0]['url']
+        current_games_description = response['currentGames'][0]['description']
+        send_img = bot.send_photo(message.chat.id, image_currentgames)
+        sent_msg = bot.send_message(message.chat.id, "🎮 Il gioco gratis di oggi è " + current_games + "\n\n" + current_games_description)
+    else:
+        url = "https://api.plenusbot.xyz/epic_games?country=IT"
+        response = requests.get(url).json()
+        future_games1 = response['nextGames'][0]['title']
+        image_futuregames1 = response['nextGames'][0]['keyImages'][0]['url']
+        future_games_description1 = response['nextGames'][0]['description']
+        send_img = bot.send_photo(message.chat.id, image_futuregames1)
+        sent_msg = bot.send_message(message.chat.id, "🎮 Il gioco futuro è " + future_games1 + "\n\n" + future_games_description1)
+        future_games2 = response['nextGames'][1]['title']
+        image_futuregames2 = response['nextGames'][1]['keyImages'][0]['url']
+        future_games_description2 = response['nextGames'][1]['description']
+        send_img = bot.send_photo(message.chat.id, image_futuregames2)
+        sent_msg = bot.send_message(message.chat.id, "🎮 Il gioco futuro è " + future_games2 + "\n\n" + future_games_description2)
 bot.polling()
