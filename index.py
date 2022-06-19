@@ -41,7 +41,7 @@ def send_welcome(message):
     chat_id = message.chat.id
     print("Triggered command START.")
     bot.send_photo(chat_id, photo='https://i.imgur.com/6YPJBze.png')
-    messageText = "✋ Benvenuto su <b>RetniNet!</b>\n\n<b>RetniNet</b> è un bot privato per <b>automatizzare</b> e <b>semplificare</b> cose che facciamo quotidianamente. \n\n👨‍💻 Creato & sviluppato da @Stef58_Official \n⚠️ Lo start è stato preso da DeathRoad"
+    messageText = "✋ Benvenuto su <b>RetniNet!</b>\n\n<b>RetniNet</b> è un bot privato per <b>automatizzare</b> e <b>semplificare</b> cose che facciamo quotidianamente. \n\n👨‍💻 Creato & sviluppato da @Stef58_Official"
     bot.send_message(chat_id,messageText, parse_mode="HTML")
 
 #Command /music
@@ -175,4 +175,6 @@ def epicgames_step(message):
         future_games_description2 = response['nextGames'][1]['description']
         send_img = bot.send_photo(message.chat.id, image_futuregames2)
         sent_msg = bot.send_message(message.chat.id, "🎮 Il gioco futuro è " + future_games2 + "\n\n" + future_games_description2)
+
+
 bot.polling()
