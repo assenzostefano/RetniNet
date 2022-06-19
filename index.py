@@ -53,7 +53,8 @@ def select_music(pm):
     
 
 def music_step(pm):
-    ytdl_opts = {
+    if pm.text.startswith('https://www.youtube.com/') or pm.text.startswith('https://youtu.be/'):
+        ytdl_opts = {
         'format': 'bestaudio/best',
         'outtmpl': '%(title)s.%(ext)s',
         'postprocessors': [{
@@ -62,22 +63,18 @@ def music_step(pm):
         'preferredquality': '192',
         }],
     }
-    url = pm.text
-    send_message = "🎶 Stiamo scaricando la canzone attenda..."
-    bot.send_message(pm.chat.id, send_message)
-    with YoutubeDL(ytdl_opts) as ydl:
-        info = ydl.extract_info(url, download=False)
-        name = info.get('title')
-        id = info.get('id')
-        ydl.download([id])
-        send_message = "🎶 La canzone <b>" + name + "</b> è stata scaricata con successo!"
-        bot.send_message(pm.chat.id, send_message, parse_mode="HTML")
-        bot.send_audio(pm.chat.id, audio=open(name + '.mp3', 'rb'))
+        with YoutubeDL(ytdl_opts) as ydl:
+            url = pm.text
+            info = ydl.extract_info(url, download=False)
+            name = info.get('title')
+            id = info.get('id')
+            ydl.download([id])
+            send_message = "🎶 La canzone <b>" + name + "</b> è stata scaricata con successo!"
+            bot.send_message(pm.chat.id, send_message, parse_mode="HTML")
+            bot.send_audio(pm.chat.id, audio=open(name + '.mp3', 'rb'))
+    else:
+        bot.send_message(pm.chat.id, "🚫 Devi inserire un <b>link</b> valido!")
 
-#def send_music(message):
-#    bot.send_audio(message.chat.id, audio=open('song.mp3', 'rb'))
-#    os.remove('song.mp3')
-        
 #Command /meteo
 @bot.message_handler(commands=['meteo'])
 def meteo(pm):
