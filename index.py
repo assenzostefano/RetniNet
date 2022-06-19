@@ -48,14 +48,6 @@ def send_welcome(message):
 @bot.message_handler(commands=['music'])
 def select_music(pm):
     print("Triggered command MUSIC.")
-    ydl_opts = {
-        'format': 'bestaudio/best',
-        'postprocessors': [{
-        'key': 'FFmpegExtractAudio',
-        'preferredcodec': 'mp3',
-        'preferredquality': '192',
-        }],
-    }
     sent_msg = bot.send_message(pm.chat.id, "Inserisci il link della canzone:")
     bot.register_next_step_handler(sent_msg, music_step)
     
@@ -63,11 +55,11 @@ def select_music(pm):
 def music_step(pm):
     ytdl_opts = {
         'format': 'bestaudio/best',
-        'outtmpl': 'song.%(ext)s',
+        'outtmpl': '%(title)s.%(ext)s',
         'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
-            'preferredquality': '192',
+        'key': 'FFmpegExtractAudio',
+        'preferredcodec': 'mp3',
+        'preferredquality': '192',
         }],
     }
     url = pm.text
@@ -80,11 +72,11 @@ def music_step(pm):
         ydl.download([id])
         send_message = "🎶 La canzone <b>" + name + "</b> è stata scaricata con successo!"
         bot.send_message(pm.chat.id, send_message, parse_mode="HTML")
-        send_music(pm)
+        bot.send_audio(pm.chat.id, audio=open(name + '.mp3', 'rb'))
 
-def send_music(message):
-    bot.send_audio(message.chat.id, audio=open('song.mp3', 'rb'))
-    os.remove('song.mp3')
+#def send_music(message):
+#    bot.send_audio(message.chat.id, audio=open('song.mp3', 'rb'))
+#    os.remove('song.mp3')
         
 #Command /meteo
 @bot.message_handler(commands=['meteo'])
