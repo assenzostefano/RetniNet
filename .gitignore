@@ -1,3 +1,8 @@
 ffmpeg.exe
 .env
 test.py
+.cache
+music_cache
+nuvola.py
+debug.log
+nuvola.txt
