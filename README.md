@@ -44,4 +44,4 @@ ___
 |         botToken        |                    "-"                     |  The token you copied from the BotFather, used to login the bot.        |
 |         pastebinToken        |                    "-"                     |  Paste the Pastebin Token on the .env.example        |
 |       weatherToken      |                         "-"                |  Paste the Weather Token on the .env.example   |
-|         deeplToken         |            "924159913024958505"            |              Paste the Deepl Token on the .env.example                 |
+|         deeplToken         |            "-"            |              Paste the Deepl Token on the .env.example                 |
