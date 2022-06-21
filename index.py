@@ -112,6 +112,7 @@ def music_step(pm):
             bot.send_audio(pm.chat.id, audio=open("music_cache/" + name + '.mp3', 'rb'))
             os.remove("music_cache/" + name + '.mp3')
             logging.info("\"" + name + "\" è stato scaricato ed eliminato con successo!")
+
     elif pm.text.startswith('https://youtube.com/') or pm.text.startswith('youtube.com/'):
         bot.send_message(
             pm.chat.id, "🚫 <b>Errore</b>\n\n<b>Il link</b> inserito non è valido!")
@@ -135,8 +136,7 @@ def music_step(pm):
 
         else:
             chat = pm.chat.id
-            bot.send_message(chat, pm.chat.id,
-                             "🚫 Devi inserire un <b>link</b> valido!")
+            bot.send_message(chat, pm.chat.id,"🚫 Devi inserire un <b>link</b> valido!")
 
 
 #Command /meteo
@@ -240,8 +240,7 @@ def epicgames_step(message):
             current_games_description, target_lang='IT')
         result_description = description_translate.text
         send_img = bot.send_photo(message.chat.id, image_currentgames)
-        sent_msg = bot.send_message(
-            message.chat.id, "🎮 Il gioco gratis di oggi è " + current_games + "\n\n" + result_description)
+        sent_msg = bot.send_message(message.chat.id, "🎮 Il gioco gratis di oggi è " + current_games + "\n\n" + result_description)
     else:
         logging.info("Triggered command EPICGAMES FUTURO.")
         # URL API
@@ -255,12 +254,10 @@ def epicgames_step(message):
         future_games_description1 = response['nextGames'][0]['description']
         # Token for translate
         translator = deepl.Translator(os.getenv('DEEPL_TOKEN'))
-        description_translate1 = translator.translate_text(
-            future_games_description1, target_lang='IT')
+        description_translate1 = translator.translate_text(future_games_description1, target_lang='IT')
         result_description1 = description_translate1.text
         send_img = bot.send_photo(message.chat.id, image_futuregames1)
-        sent_msg = bot.send_message(
-            message.chat.id, "🎮 Il gioco futuro è " + future_games1 + "\n\n" + result_description1)
+        sent_msg = bot.send_message(message.chat.id, "🎮 Il gioco futuro è " + future_games1 + "\n\n" + result_description1)
         # Title of future games
         future_games2 = response['nextGames'][1]['title']
         # Image future games
@@ -268,12 +265,10 @@ def epicgames_step(message):
         # Description future games
         future_games_description2 = response['nextGames'][1]['description']
         # Traslate description future games
-        description_translate2 = translator.translate_text(
-            future_games_description2, target_lang='IT')
+        description_translate2 = translator.translate_text(future_games_description2, target_lang='IT')
         result_description2 = description_translate2.text
         send_img = bot.send_photo(message.chat.id, image_futuregames2)
-        sent_msg = bot.send_message(
-            message.chat.id, "🎮 Il gioco futuro è " + future_games2 + "\n\n" + result_description2)
+        sent_msg = bot.send_message(message.chat.id, "🎮 Il gioco futuro è " + future_games2 + "\n\n" + result_description2)
 
 
 bot.polling()
