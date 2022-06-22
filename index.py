@@ -19,6 +19,7 @@ import urllib.parse
 import logging
 import deepl
 import spotipy
+import pyshorteners
 from spotipy.oauth2 import SpotifyClientCredentials
 from youtube_search import YoutubeSearch
 from dotenv import load_dotenv
@@ -270,5 +271,58 @@ def epicgames_step(message):
         send_img = bot.send_photo(message.chat.id, image_futuregames2)
         sent_msg = bot.send_message(message.chat.id, "🎮 Il gioco futuro è " + future_games2 + "\n\n" + result_description2)
 
+#Command /shutdown
+@bot.message_handler(commands=['shutdown'])
+def shutdown(message):
+    text = message.text
+    sent_msg = bot.send_message(message.chat.id, "Sei sicuro di voler spegnere il pc?")
+    bot.register_next_step_handler(sent_msg, shutdown_step)
+
+def shutdown_step(message):
+    id = message.from_user.id
+    text = message.text
+    id_owner = os.getenv('USER_ID')
+    if id == id_owner:
+
+        if text == "si" or text == "Si" or text == "y" or text == "Y" or text == "Yes" or text == "yes":
+            bot.send_message(message.chat.id, "Il computer è stato spento con successo!")
+            logging.info("Triggered Shutdown")
+            url = os.getenv("PASSWORD")
+            requests.get(url)
+        else:
+            bot.send_message(message.chat.id, "⚠️ Hai annullato l'operazione!")
+    else:
+        bot.send_message(message.chat.id, "Eh volevi!")
+
+#Command /shortlink
+
+@bot.message_handler(commands=['shortlink'])
+def shortlink(message):
+    text = message.text
+    sent_msg = bot.send_message(message.chat.id, "Inserisci il link:")
+    bot.register_next_step_handler(sent_msg, shortlink_step)
+
+def shortlink_step(message):
+    text = message.text
+    type_tiny = pyshorteners.Shortener()
+    short_url = type_tiny.tinyurl.short(text)
+    bot.send_message(message.chat.id, "Ecco a te lo shortlink: " + short_url)
+
+#Command /uptime
+@bot.message_handler(commands=['uptime'])
+def uptime(message):
+    logging.info("Triggered UPTIME")
+    sent_msg = bot.send_message(message.chat.id, "Manda il link del sito che vuoi controllare.")
+    bot.register_next_step_handler(sent_msg, uptime_step)
+
+def uptime_step(message):
+    text = message.text
+    url= text
+    status_code = urllib.request.urlopen(url).getcode()
+    website_is_up = status_code == 200
+    if website_is_up == True:
+        bot.send_message(message.chat.id, "Il sito è online!")
+    else:
+        bot.send_message(message.chat.id, "Il sito non è online!")
 
 bot.polling()

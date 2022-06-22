@@ -31,3 +31,5 @@ youtube_search == 2.1.0
 yt_dlp == 2022.5.18
 
 pytelegrambotapi == 4.5.1
+
+pyshorteners == 1.0.1
