@@ -47,8 +47,9 @@ logging.basicConfig(
 
 load_dotenv()
 API_TOKEN = os.getenv('BOT_TOKEN')
-
 bot = telebot.TeleBot(API_TOKEN)
+
+#Start bot
 logging.info("Il bot si è avviato con successo!")
 
 
@@ -72,7 +73,9 @@ def select_music(pm):
 
 
 def music_step(pm):
-    if pm.text.startswith('https://www.youtube.com/') or pm.text.startswith('https://youtu.be/'):
+    text = pm.text
+    #Check if the link is correct (Youtube and Spotify links only)
+    if text.startswith('https://www.youtube.com/') or text.startswith('https://youtu.be/'):
         ytdl_opts = {
             'format': 'bestaudio/best',
             'outtmpl': 'music_cache/%(title)s.%(ext)s',
@@ -82,6 +85,18 @@ def music_step(pm):
                 'preferredquality': '192',
             }],
         }
+        with YoutubeDL(ytdl_opts) as ydl:
+            url = pm.text
+            info = ydl.extract_info(url, download=False)
+            name = info.get('title')
+            id = info.get('id')
+            ydl.download([id])
+            send_message = "🎶 La canzone <b>" + name + \
+                    "</b> è stata scaricata con successo!"
+            bot.send_message(pm.chat.id, send_message, parse_mode="HTML")
+            bot.send_audio(pm.chat.id, audio=open("music_cache/" + name + '.mp3', 'rb'))
+            os.remove("music_cache/" + name + '.mp3')
+    #If the link for spotify ends with /album, /user, /playlist ecc.. send a error message
     elif pm.text.startswith('https://open.spotify.com/track/'):
         ytdl_opts = {
             'format': 'bestaudio/best',
