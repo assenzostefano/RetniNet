@@ -31,9 +31,9 @@ python index.py
 ___
 ### Bot config:
 
-**DISCLAIMER: We won't help you rebranding the bot for any other server. If you really want to do that, then you need to figure it out yourself.**
+**DISCLAIMER: This bot must be used in educational purposes only. Your decisions are not our responsibility.**
 
-- Create a bot on the **[BotFather](https://t.me/BotFather)**.
+- Create a bot on **[BotFather](https://t.me/BotFather)**.
 - Go to the **Bot** tab, create a bot and copy its token.
 - Create a file named **.env** or rename the **.env.example** file to **.env**.
 - Open the **.env** file using any text editor.
@@ -45,3 +45,7 @@ ___
 |         pastebinToken        |                    "-"                     |  Paste the Pastebin Token on the .env.example        |
 |       weatherToken      |                         "-"                |  Paste the Weather Token on the .env.example   |
 |         deeplToken         |            "-"            |              Paste the Deepl Token on the .env.example                 |
+|         spotifyid         |            "-"            |              Paste the Spotify Id on the .env.example                 |
+|         spotifysecret        |            "-"            |              Paste the Spotify Secret on the .env.example                 |
+|         user_id       |            "-"            |              Paste your user id on the .env.example                 |
+|         password        |            "-"            |              Paste the link for shutdown commands on the .env.example                 |
