@@ -33,3 +33,5 @@ yt_dlp == 2022.5.18
 pytelegrambotapi == 4.5.1
 
 pyshorteners == 1.0.1
+
+pdf2docx == 0.5.4

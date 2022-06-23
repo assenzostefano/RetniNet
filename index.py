@@ -20,6 +20,8 @@ import logging
 import deepl
 import spotipy
 import pyshorteners
+import pdf2docx
+from pdf2docx import Converter, parse
 from spotipy.oauth2 import SpotifyClientCredentials
 from youtube_search import YoutubeSearch
 from dotenv import load_dotenv
@@ -297,7 +299,7 @@ def shutdown_step(message):
     id = message.from_user.id
     text = message.text
     id_owner = os.getenv('USER_ID')
-    if id == id_owner:
+    if id == 771375637:
 
         if text == "si" or text == "Si" or text == "y" or text == "Y" or text == "Yes" or text == "yes":
             bot.send_message(message.chat.id, "Il computer è stato spento con successo!")
@@ -306,8 +308,6 @@ def shutdown_step(message):
             requests.get(url)
         else:
             bot.send_message(message.chat.id, "⚠️ Hai annullato l'operazione!")
-    else:
-        bot.send_message(message.chat.id, "Eh volevi!")
 
 #Command /shortlink
 
@@ -339,5 +339,40 @@ def uptime_step(message):
         bot.send_message(message.chat.id, "Il sito è online!")
     else:
         bot.send_message(message.chat.id, "Il sito non è online!")
+
+#Command /convert
+@bot.message_handler(commands=["convert"])
+def addfile(message):
+    sent_msg = bot.send_message(message.chat.id, "Manda il file pdf che vuoi convertire in docx")
+    bot.register_next_step_handler(sent_msg, convert)
+
+def convert(message):
+    file_name = message.document.file_name
+    file_info = bot.get_file(message.document.file_id)
+    downloaded_file = bot.download_file(file_info.file_path)
+    with open(file_name, 'wb') as new_file:
+        new_file.write(downloaded_file)
+    docx_file = file_name + '.docx'
+    pdf_file = file_name
+    cv = Converter(pdf_file)
+    cv.convert(docx_file)
+    cv.close()
+    html_doc = open(docx_file, 'rb')
+    sent_msg = bot.send_message(message.chat.id, "Il file è stato convertito con successo!")
+    bot.send_document(message.chat.id, html_doc)
+    os.remove(pdf_file)
+
+#Command /cloud
+@bot.message_handler(commands=["cloud"])
+def cloud(message):
+    sent_msg = bot.send_message(message.chat.id, "Invia il file che vuoi caricare")
+    bot.register_next_step_handler(sent_msg, cloud_step)
+
+def cloud_step(message):
+    file_name = message.document.file_name
+    file_info = bot.get_file(message.document.file_id)
+    downloaded_file = bot.download_file(file_info.file_path)
+    with open(file_name, 'wb') as new_file:
+        new_file.write(downloaded_file)
 
 bot.polling()
