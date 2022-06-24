@@ -6,3 +6,5 @@ nuvola.py
 debug.log
 nuvola.txt
 test.py
+*.pdf
+data.json

@@ -21,6 +21,7 @@ import deepl
 import spotipy
 import pyshorteners
 import pdf2docx
+import ndjson
 from random import randint
 from random import random
 from fileinput import filename
@@ -372,6 +373,7 @@ def cloud(message):
     bot.register_next_step_handler(sent_msg, cloud_step)
 
 def cloud_step(message):
+    id = message.from_user.id
     file_name = message.document.file_name
     file_info = bot.get_file(message.document.file_id)
     downloaded_file = bot.download_file(file_info.file_path)
@@ -389,5 +391,14 @@ def cloud_step(message):
         os.replace(file_name, 'cloud/'+file_name)
     bot.send_message(message.chat.id, "Il tuo file è stato caricato con successo! Ecco l'id del tuo file "+new_name)
     bot.send_message(message.chat.id, "Se vuoi scaricare il file fai /cloud download + l'id del file")
+    dic_exm ={
+
+    "filename" : new_name,
+    "user_id" : id,
+    
+    }
+    with open('data.json', 'a') as f:
+        json.dump(dic_exm, f, indent=2)
+        f.write('\n')
 
 bot.polling()
