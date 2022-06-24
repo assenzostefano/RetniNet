@@ -21,6 +21,8 @@ import deepl
 import spotipy
 import pyshorteners
 import pdf2docx
+from random import randint
+from random import random
 from fileinput import filename
 from pdf2docx import Converter, parse
 from spotipy.oauth2 import SpotifyClientCredentials
@@ -373,8 +375,19 @@ def cloud_step(message):
     file_name = message.document.file_name
     file_info = bot.get_file(message.document.file_id)
     downloaded_file = bot.download_file(file_info.file_path)
-    with open(file_name, 'wb') as new_file:
-        new_file.write(downloaded_file)
-    os.replace(file_name, 'cloud/'+file_name)
+    if file_name == file_name:
+        with open(file_name, 'wb') as new_file:
+            new_file.write(downloaded_file)
+        value = randint(1, 9999)
+        old_name = file_name
+        new_name = str(value) + file_name
+        os.rename(old_name, new_name)
+        os.replace(new_name, 'cloud/'+new_name)
+    else:
+        with open(file_name, 'wb') as new_file:
+            new_file.write(downloaded_file)
+        os.replace(file_name, 'cloud/'+file_name)
+    bot.send_message(message.chat.id, "Il tuo file è stato caricato con successo! Ecco l'id del tuo file "+new_name)
+    bot.send_message(message.chat.id, "Se vuoi scaricare il file fai /cloud download + l'id del file")
 
 bot.polling()
