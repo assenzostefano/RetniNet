@@ -295,6 +295,7 @@ def epicgames_step(message):
 #Command /shutdown
 @bot.message_handler(commands=['shutdown'])
 def shutdown(message):
+    logging.ingo("Triggered SHUTDOWN")
     text = message.text
     sent_msg = bot.send_message(message.chat.id, "Sei sicuro di voler spegnere il pc?")
     bot.register_next_step_handler(sent_msg, shutdown_step)
@@ -317,6 +318,7 @@ def shutdown_step(message):
 
 @bot.message_handler(commands=['shortlink'])
 def shortlink(message):
+    logging.info("Triggered SHORTLINK")
     text = message.text
     sent_msg = bot.send_message(message.chat.id, "Inserisci il link:")
     bot.register_next_step_handler(sent_msg, shortlink_step)
@@ -347,6 +349,7 @@ def uptime_step(message):
 #Command /convert
 @bot.message_handler(commands=["convert"])
 def addfile(message):
+    logging.info("Triggered CONVERT")
     sent_msg = bot.send_message(message.chat.id, "Manda il file pdf che vuoi convertire in docx")
     bot.register_next_step_handler(sent_msg, convert)
 
@@ -369,6 +372,7 @@ def convert(message):
 #Command /cloud
 @bot.message_handler(commands=["cloud"])
 def cloud(message):
+    logging.info("Triggered CLOUD")
     sent_msg = bot.send_message(message.chat.id, "Invia il file che vuoi caricare")
     bot.register_next_step_handler(sent_msg, cloud_step)
 
@@ -395,7 +399,7 @@ def cloud_step(message):
 
     "filename" : new_name,
     "user_id" : id,
-    
+
     }
     with open('data.json', 'a') as f:
         json.dump(dic_exm, f, indent=2)
