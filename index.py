@@ -20,6 +20,7 @@ import spotipy
 import pyshorteners
 import pdf2docx
 import PyPDF2
+import urllib
 from googletrans import Translator
 from random import randint
 from random import random
