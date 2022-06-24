@@ -21,6 +21,7 @@ import deepl
 import spotipy
 import pyshorteners
 import pdf2docx
+from fileinput import filename
 from pdf2docx import Converter, parse
 from spotipy.oauth2 import SpotifyClientCredentials
 from youtube_search import YoutubeSearch
@@ -374,5 +375,6 @@ def cloud_step(message):
     downloaded_file = bot.download_file(file_info.file_path)
     with open(file_name, 'wb') as new_file:
         new_file.write(downloaded_file)
+    os.replace(file_name, 'cloud/'+file_name)
 
 bot.polling()
