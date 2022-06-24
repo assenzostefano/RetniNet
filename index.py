@@ -21,6 +21,7 @@ import pyshorteners
 import pdf2docx
 import PyPDF2
 import urllib
+from currency_converter import CurrencyConverter
 from googletrans import Translator
 from random import randint
 from random import random
@@ -353,7 +354,7 @@ def uptime_step(message):
     #     bot.send_message(message.chat.id, "Si è verificato un errore")
 
 #Command /convert
-@bot.message_handler(commands=["convert"])
+@bot.message_handler(commands=["convertpdf"])
 def addfile(message):
     logging.info("Triggered CONVERT")
     sent_msg = bot.send_message(message.chat.id, "Manda il file pdf che vuoi convertire in docx")
@@ -444,4 +445,27 @@ def translatepdf_step(message):
     bot.send_message(message.chat.id, translated_text.text)
     os.remove(input_file_position)
     os.remove(text_file_position)
+
+#Command /convertmoney
+@bot.message_handler(commands=["convertmoney"])
+def convertmoney(message):
+    logging.info("Triggered CONVERT MONEY")
+    text = message.text
+    sent_msg = bot.send_message(message.chat.id, "In che valuta vuoi convertire?")
+    bot.register_next_step_handler(sent_msg, convertmoney_step)
+
+
+def convertmoney_step(message):
+    text = message.text
+    c = CurrencyConverter()
+    second = text
+    sent_msg = bot.send_message(message.chat.id, "Inserisci quanto vuoi convertire?")
+    bot.register_next_step_handler(sent_msg,convertmoney_step2, second )
+
+def convertmoney_step2(message, second):
+    many = message.text
+    c = CurrencyConverter()
+    example = c.convert(many, 'EUR', second)
+    bot.send_message(message.chat.id, str(example))
+
 bot.polling()

@@ -39,3 +39,5 @@ pdf2docx == 0.5.4
 googletrans == 3.0.0
 
 PyPDF2 == 2.3.1
+
+currencyconverter == 0.16.12
