@@ -21,7 +21,8 @@ import deepl
 import spotipy
 import pyshorteners
 import pdf2docx
-import ndjson
+import PyPDF2
+from googletrans import Translator
 from random import randint
 from random import random
 from fileinput import filename
@@ -388,11 +389,11 @@ def cloud_step(message):
         old_name = file_name
         new_name = str(value) + file_name
         os.rename(old_name, new_name)
-        os.replace(new_name, 'cloud/'+new_name)
+        os.replace(new_name, 'storage/'+new_name)
     else:
         with open(file_name, 'wb') as new_file:
             new_file.write(downloaded_file)
-        os.replace(file_name, 'cloud/'+file_name)
+        os.replace(file_name, 'storage/'+file_name)
     bot.send_message(message.chat.id, "Il tuo file è stato caricato con successo! Ecco l'id del tuo file "+new_name)
     bot.send_message(message.chat.id, "Se vuoi scaricare il file fai /cloud download + l'id del file")
     dic_exm ={
@@ -405,4 +406,37 @@ def cloud_step(message):
         json.dump(dic_exm, f, indent=2)
         f.write('\n')
 
+@bot.message_handler(commands=["translatepdf"])
+def translatepdf(message):
+    logging.info("Triggered TRANSLATE PDF")
+    sent_msg = bot.send_message(message.chat.id, "Scrivi il messaggio che vuoi tradurre.")
+    bot.register_next_step_handler(sent_msg, translatepdf_step)
+
+def translatepdf_step(message):
+    id = message.from_user.id
+    file_name = message.document.file_name
+    file_info = bot.get_file(message.document.file_id)
+    downloaded_file = bot.download_file(file_info.file_path)
+    with open(file_name, 'wb') as new_file:
+        new_file.write(downloaded_file)
+    input_file = file_name
+    text_file = file_name + '.txt'
+    os.replace(input_file, 'storage/'+input_file)
+    input_file_position = 'storage/'+input_file
+    with open(input_file_position, "rb") as pdf_file:
+        read_pdf = PyPDF2.PdfFileReader(pdf_file)
+        number_of_pages = read_pdf.getNumPages()
+        page = read_pdf.pages[0]
+        page_content = page.extractText()
+    with open(text_file, 'w') as f:
+        f.write(page_content)
+    os.replace(text_file, 'storage/'+text_file)
+    text_file_position = 'storage/'+text_file
+    f = open(text_file_position)
+    contents = f.read()
+    translator = Translator()
+    translated_text = translator.translate(contents, dest='it')
+    bot.send_message(message.chat.id, translated_text.text)
+    os.remove(input_file_position)
+    os.remove(text_file_position)
 bot.polling()
