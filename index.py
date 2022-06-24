@@ -14,8 +14,6 @@ import python_weather
 import asyncio
 import json
 import goslate
-import urllib.request
-import urllib.parse
 import logging
 import deepl
 import spotipy
@@ -339,13 +337,19 @@ def uptime(message):
 
 def uptime_step(message):
     text = message.text
-    url= text
-    status_code = urllib.request.urlopen(url).getcode()
-    website_is_up = status_code == 200
-    if website_is_up == True:
-        bot.send_message(message.chat.id, "Il sito è online!")
-    else:
-        bot.send_message(message.chat.id, "Il sito non è online!")
+    try:
+        x = requests.get(text)
+        if x.status_code == 200:
+            bot.send_message(message.chat.id, "Il sito è online, puoi festeggiare adesso! :tada:")
+    except requests.exceptions.ConnectionError:
+        bot.send_message(message.chat.id, "Il sito non esiste oppure è offline, sad...")
+    # status_code = urllib.request.urlopen(url).getcode()
+    # website_is_up = status_code == 200
+    # try
+    #     if website_is_up == True:
+    #         bot.send_message(message.chat.id, "Il sito è online!")
+    # except:
+    #     bot.send_message(message.chat.id, "Si è verificato un errore")
 
 #Command /convert
 @bot.message_handler(commands=["convert"])
