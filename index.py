@@ -444,7 +444,6 @@ def translatepdf_step(message):
     translated_text = translator.translate(contents, dest='it')
     bot.send_message(message.chat.id, translated_text.text)
     os.remove(input_file_position)
-    os.remove(text_file_position)
 
 #Command /convertmoney
 @bot.message_handler(commands=["convertmoney"])
