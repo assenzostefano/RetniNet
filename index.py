@@ -453,7 +453,6 @@ def convertmoney(message):
     sent_msg = bot.send_message(message.chat.id, "In che valuta vuoi convertire?")
     bot.register_next_step_handler(sent_msg, convertmoney_step)
 
-
 def convertmoney_step(message):
     text = message.text
     c = CurrencyConverter()
@@ -466,5 +465,19 @@ def convertmoney_step2(message, second):
     c = CurrencyConverter()
     example = c.convert(many, 'EUR', second)
     bot.send_message(message.chat.id, str(example))
+
+#Plenus is off or on?
+while True:
+    try:
+        x = requests.get('https://plenusbot.xyz')
+        if x.status_code == 200:
+            logging.info("Plenus ON!")
+            time.sleep(3600)
+    except requests.exceptions.ConnectionError:
+        bot.send_message(771375637, "Plenus è OFF!")
+        time.sleep(3600)
+    except KeyboardInterrupt:
+        logging.info("Il bot è stato spento con successo!")
+        break
 
 bot.polling()
